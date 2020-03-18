@@ -3,10 +3,10 @@
 namespace Omatech\Enigma\Tests;
 
 use Illuminate\Support\Facades\Schema;
+use Omatech\Enigma\Exceptions\InvalidClassException;
 use Omatech\Enigma\Tests\Stubs\Models\Stub1;
 use Omatech\Enigma\Tests\Stubs\Models\Stub2;
 use Omatech\Enigma\Tests\Stubs\Models\Stub3;
-use RuntimeException;
 
 class EncryptModelTestBase extends TestCase
 {
@@ -157,7 +157,7 @@ class EncryptModelTestBase extends TestCase
     /** @test */
     public function exception_on_rehydratate_index_command(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(InvalidClassException::class);
         $this->artisan('enigma:reindex', ['model' => self::class])
             ->assertExitCode(0);
     }
