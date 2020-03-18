@@ -97,6 +97,23 @@ class EncryptModelTestBase extends TestCase
     }
 
     /** @test */
+    public function find_no_results_on_where_encrypted_value(): void
+    {
+        $stub1 = new Stub1();
+        $stub1->name = 'stub1';
+        $stub1->save();
+
+        $stub2 = new Stub1();
+        $stub2->name = 'stub2';
+        $stub2->save();
+
+        $foundStub = Stub1::where('name', 'stub4')
+            ->get();
+
+        $this->assertSame(count($foundStub), 0);
+    }
+
+    /** @test */
     public function update_encrypted_value(): void
     {
         $stub = new Stub1();
