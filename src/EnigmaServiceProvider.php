@@ -4,12 +4,13 @@ namespace Omatech\Enigma;
 
 use Illuminate\Database\Connection;
 use Illuminate\Support\ServiceProvider;
-use Omatech\Enigma\Database\Contracts\DBInterface;
 use Omatech\Enigma\Database\Eloquent\DB;
+use Omatech\Enigma\Commands\ReIndexCommand;
 use Omatech\Enigma\Database\MySqlConnection;
-use Omatech\Enigma\Database\PostgresConnection;
 use Omatech\Enigma\Database\SQLiteConnection;
+use Omatech\Enigma\Database\PostgresConnection;
 use Omatech\Enigma\Database\SqlServerConnection;
+use Omatech\Enigma\Database\Contracts\DBInterface;
 
 class EnigmaServiceProvider extends ServiceProvider
 {
@@ -35,5 +36,7 @@ class EnigmaServiceProvider extends ServiceProvider
         Connection::resolverFor('sqlsrv', static function ($connection, $database, $prefix, $config) {
             return new SqlServerConnection($connection, $database, $prefix, $config);
         });
+
+        $this->commands(ReIndexCommand::class);
     }
 }

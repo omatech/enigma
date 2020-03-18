@@ -7,6 +7,7 @@ use Omatech\Enigma\Tests\Stubs\Models\Stub1;
 use Omatech\Enigma\Tests\Stubs\Models\Stub2;
 use Omatech\Enigma\Tests\Stubs\Models\Stub3;
 use RuntimeException;
+use SebastianBergmann\Environment\Runtime;
 
 class EncryptModelTestBase extends TestCase
 {
@@ -140,5 +141,25 @@ class EncryptModelTestBase extends TestCase
             'model_id' => $stub->id,
             'name' => 'birthday',
         ]);
+    }
+
+    /** @test */
+    public function rehydratate_index_command(): void
+    {
+        $stub = new Stub1();
+        $stub->name = 'test';
+        $stub->surnames = 'test';
+        $stub->save();
+
+        $this->artisan('enigma:reindex', ['model' => Stub1::class])
+            ->assertExitCode(0);
+    }
+
+    /** @test */
+    public function exception_on_rehydratate_index_command(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->artisan('enigma:reindex', ['model' => self::class])
+            ->assertExitCode(0);
     }
 }

@@ -216,6 +216,20 @@ class Enigma
         ))->decryptValue($value);
     }
 
+    public function deleteHash($model, $modelId, $column)
+    {
+        (app()->makeWith(DBInterface::class, [
+            'table' => $model->getTable(),
+        ]))->deleteHash($modelId, $column);
+    }
+
+    public function setModelId($model, $modelId, $ids)
+    {
+        (app()->makeWith(DBInterface::class, [
+            'table' => $model->getTable(),
+        ]))->setModelId($modelId, $ids);
+    }
+
     /**
      * @param string $column
      * @return string
