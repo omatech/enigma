@@ -1,0 +1,49 @@
+language: php
+
+php:
+  - 7.2
+  - 7.3
+  - 7.4
+
+services:
+    - mysql
+    - postgresql
+    - docker
+
+addons:
+    sonarcloud:
+        organization: "omatech"
+        token: ${SONAR_TOKEN}
+
+env:
+    matrix:
+        - COMPOSER_FLAGS="--prefer-stable"
+
+before_script:
+    - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+    - sudo curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list
+    - sudo apt-get update
+    - sudo ACCEPT_EULA=Y apt-get -y install msodbcsql17
+    - sudo apt-get -y install unixodbc-dev
+    - pecl install sqlsrv
+    - pecl install pdo_sqlsrv
+    - echo "extension=sqlsrv.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "extension=sqlsrv.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+    - docker run --name sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
+    - docker cp tests/Stubs/setup.sql sqlserver:/tmp
+    - sleep 20
+    - docker exec sqlserver opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i tmp/setup.sql
+
+    - mysql -e 'create database testing;'
+    - psql -c 'create database testing;' -U postgres
+    - travis_retry composer self-update
+    - travis_retry composer require scrutinizer/ocular --no-interaction --no-update
+    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction --no-suggest
+
+script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --log-junit=report.xml
+
+after_script:
+    - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+    - sonar-scanner

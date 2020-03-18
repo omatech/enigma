@@ -1,0 +1,60 @@
+{
+    "name": "omatech/enigma",
+    "description": "Enigma is a ciphersweet wrapper for laravel, it gives us the possibility to search on encrypted values.",
+    "keywords": [
+        "omatech",
+        "enigma",
+        "laravel",
+        "ciphersweet",
+        "encryption",
+        "search",
+        "blindindex",
+        "hash"
+    ],
+    "homepage": "https://github.com/omatech/enigma",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Christian Bohollo",
+            "email": "cbohollo@omatech.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "illuminate/support": "^6.0",
+        "paragonie/ciphersweet": "^2.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^4.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omatech\\Enigma\\": "src"
+        },
+        "files": [
+            "src/Helpers/enigma.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Omatech\\Enigma\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Omatech\\Enigma\\EnigmaServiceProvider"
+            ]
+        }
+    }
+}

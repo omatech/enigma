@@ -1,0 +1,7 @@
+build
+docs
+vendor
+coverage
+.idea
+/test-report.xml
+/.phpunit.result.cache
