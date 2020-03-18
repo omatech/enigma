@@ -97,7 +97,7 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
                 'table' => $this->getModel()->getTable(),
             ]))->findByHash($column, $hash);
 
-            $ids = (count($ids) == 0) ? 'FALSE' : implode(',', $ids);
+            $ids = (count($ids) == 0) ? "'FALSE'" : implode(',', $ids);
 
             $closure = static function (self $query) use ($ids) {
                 $query->whereRaw("id IN ($ids)");

@@ -27,8 +27,6 @@ before_script:
     - sudo apt-get -y install unixodbc-dev
     - pecl install sqlsrv
     - pecl install pdo_sqlsrv
-    - echo "extension=sqlsrv.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-    - echo "extension=pdo_sqlsrv.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
     - docker run --name sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
     - docker cp tests/Stubs/setup.sql sqlserver:/tmp
