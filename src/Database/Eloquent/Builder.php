@@ -70,7 +70,7 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
             );
 
             if ($value) {
-                return $this->findByHash($column, $value);
+                return $this->findByHash($column, $value, 'or');
             }
         }
 
