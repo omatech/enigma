@@ -71,7 +71,7 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
 
             if ($value) {
                 return $this->findByHash($column, $value);
-            }       
+            }
         }
 
         return parent::orWhere($column, $operator, $value);
