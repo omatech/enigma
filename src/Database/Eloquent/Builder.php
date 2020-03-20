@@ -37,7 +37,9 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
                 func_num_args() === 2
             );
 
-            return $this->findByHash($column, $value);
+            if ($value) {
+                return $this->findByHash($column, $value);
+            }
         }
 
         return parent::where($column, $operator, $value, $boolean);
@@ -67,7 +69,9 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
                 func_num_args() === 2
             );
 
-            return $this->findByHash($column, $value, 'or');
+            if ($value) {
+                return $this->findByHash($column, $value);
+            }       
         }
 
         return parent::orWhere($column, $operator, $value);

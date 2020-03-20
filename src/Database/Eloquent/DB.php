@@ -51,7 +51,7 @@ final class DB extends DBAbstract
      */
     public function deleteHash(int $modelId, string $column): void
     {
-        Query::statement("DELETE FROM $this->table WHERE model_id = $modelId AND name = $column");
+        Query::statement("DELETE FROM $this->table WHERE model_id = $modelId AND name = '$column'");
     }
 
     /**
