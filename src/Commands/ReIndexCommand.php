@@ -2,11 +2,11 @@
 
 namespace Omatech\Enigma\Commands;
 
-use RuntimeException;
-use Omatech\Enigma\Enigma;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Omatech\Enigma\Database\Eloquent\HasEnigma;
+use Omatech\Enigma\Enigma;
+use RuntimeException;
 
 class ReIndexCommand extends Command
 {

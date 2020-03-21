@@ -7,7 +7,6 @@ use Omatech\Enigma\Tests\Stubs\Models\Stub1;
 use Omatech\Enigma\Tests\Stubs\Models\Stub2;
 use Omatech\Enigma\Tests\Stubs\Models\Stub3;
 use RuntimeException;
-use SebastianBergmann\Environment\Runtime;
 
 class EncryptModelTestBase extends TestCase
 {
