@@ -141,4 +141,24 @@ class EncryptModelTestBase extends TestCase
             'name' => 'birthday',
         ]);
     }
+
+    /** @test */
+    public function rehydratate_index_command(): void
+    {
+        $stub = new Stub1();
+        $stub->name = 'test';
+        $stub->surnames = 'test';
+        $stub->save();
+
+        $this->artisan('enigma:reindex', ['model' => Stub1::class])
+            ->assertExitCode(0);
+    }
+
+    /** @test */
+    public function exception_on_rehydratate_index_command(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->artisan('enigma:reindex', ['model' => self::class])
+            ->assertExitCode(0);
+    }
 }

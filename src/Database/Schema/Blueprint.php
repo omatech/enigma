@@ -17,8 +17,8 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
             Schema::create($indexTable, static function ($table) {
                 $table->bigIncrements('id');
                 $table->unsignedBigInteger('model_id')->nullable();
-                $table->string('name');
-                $table->string('hash');
+                $table->string('name', 64);
+                $table->string('hash', 704);
 
                 $table->index(['name', 'hash']);
             });
