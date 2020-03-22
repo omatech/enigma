@@ -18,6 +18,8 @@ use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use ParagonIE\ConstantTime\Hex;
 use SodiumException;
 
+const TABLE = 'table';
+
 class Enigma
 {
     private $engine;
@@ -75,7 +77,7 @@ class Enigma
         if ($indexes) {
             foreach ($indexes[$column] as $index) {
                 $ids[] = (app()->makeWith(DBInterface::class, [
-                    'table' => $model->getTable(),
+                    TABLE => $model->getTable(),
                 ]))->insertHash($column, $index);
             }
         }
@@ -216,17 +218,27 @@ class Enigma
         ))->decryptValue($value);
     }
 
-    public function deleteHash($model, $modelId, $column)
+    /**
+     * @param $model
+     * @param $modelId
+     * @param $column
+     */
+    public function deleteHash($model, $modelId, $column): void
     {
         (app()->makeWith(DBInterface::class, [
-            'table' => $model->getTable(),
+            TABLE => $model->getTable(),
         ]))->deleteHash($modelId, $column);
     }
 
-    public function setModelId($model, $modelId, $ids)
+    /**
+     * @param $model
+     * @param $modelId
+     * @param $ids
+     */
+    public function setModelId($model, $modelId, $ids): void
     {
         (app()->makeWith(DBInterface::class, [
-            'table' => $model->getTable(),
+            TABLE => $model->getTable(),
         ]))->setModelId($modelId, $ids);
     }
 

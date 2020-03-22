@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Omatech\Enigma\Database\Eloquent\HasEnigma;
 use Omatech\Enigma\Enigma;
-use RuntimeException;
+use Omatech\Enigma\Exceptions\InvalidClassException;
 
 class ReIndexCommand extends Command
 {
@@ -36,7 +36,7 @@ class ReIndexCommand extends Command
 
         if (isset(class_uses($model)[HasEnigma::class]) === false ||
             ($model instanceof Model) === false) {
-            throw new RuntimeException('The given class is not an instance of a Model or has not Enigma loaded');
+            throw new InvalidClassException('The given class is not an instance of a Model or has not Enigma loaded');
         }
 
         $enigmaEncryptable = $model->getEnigmaEncryptable();

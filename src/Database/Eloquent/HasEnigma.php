@@ -6,9 +6,9 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Omatech\Enigma\Database\Contracts\DBInterface;
 use Omatech\Enigma\Database\Eloquent\Builder as EloquentBuilder;
 use Omatech\Enigma\Enigma;
+use Omatech\Enigma\Exceptions\RepeatedAttributesException;
 use ParagonIE\CipherSweet\Exception\BlindIndexNotFoundException;
 use ParagonIE\CipherSweet\Exception\CryptoOperationException;
-use RuntimeException;
 use SodiumException;
 use Throwable;
 
@@ -39,7 +39,7 @@ trait HasEnigma
 
         $repeated = count(array_intersect($this->getLaravelEncryptable(), $this->getEnigmaEncryptable()));
 
-        throw_if($repeated, new RuntimeException('One or more attributes are repeated on both encryptation types.'));
+        throw_if($repeated, new RepeatedAttributesException('One or more attributes are repeated on both encryptation types.'));
     }
 
     /**
