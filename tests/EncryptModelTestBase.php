@@ -3,11 +3,11 @@
 namespace Omatech\Enigma\Tests;
 
 use Illuminate\Support\Facades\Schema;
+use Omatech\Enigma\Exceptions\InvalidClassException;
+use Omatech\Enigma\Exceptions\RepeatedAttributesException;
 use Omatech\Enigma\Tests\Stubs\Models\Stub1;
 use Omatech\Enigma\Tests\Stubs\Models\Stub2;
 use Omatech\Enigma\Tests\Stubs\Models\Stub3;
-use Omatech\Enigma\Exceptions\InvalidClassException;
-use Omatech\Enigma\Exceptions\RepeatedAttributesException;
 
 class EncryptModelTestBase extends TestCase
 {

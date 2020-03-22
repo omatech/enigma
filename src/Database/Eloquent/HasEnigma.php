@@ -2,15 +2,15 @@
 
 namespace Omatech\Enigma\Database\Eloquent;
 
-use Throwable;
-use SodiumException;
-use Omatech\Enigma\Enigma;
-use Omatech\Enigma\Database\Contracts\DBInterface;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Omatech\Enigma\Exceptions\RepeatedAttributesException;
-use ParagonIE\CipherSweet\Exception\CryptoOperationException;
+use Omatech\Enigma\Database\Contracts\DBInterface;
 use Omatech\Enigma\Database\Eloquent\Builder as EloquentBuilder;
+use Omatech\Enigma\Enigma;
+use Omatech\Enigma\Exceptions\RepeatedAttributesException;
 use ParagonIE\CipherSweet\Exception\BlindIndexNotFoundException;
+use ParagonIE\CipherSweet\Exception\CryptoOperationException;
+use SodiumException;
+use Throwable;
 
 trait HasEnigma
 {
