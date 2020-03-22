@@ -19,6 +19,20 @@ env:
     matrix:
         - COMPOSER_FLAGS="--prefer-stable"
 
+include:
+        - php: 7.2
+          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+        - php: 7.2
+          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+        - php: 7.3
+          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+        - php: 7.3
+          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+        - php: 7.4
+          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+        - php: 7.4
+          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+
 before_script:
     - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
     - sudo curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list
@@ -37,6 +51,9 @@ before_script:
     - psql -c 'create database testing;' -U postgres
     - travis_retry composer self-update
     - travis_retry composer require scrutinizer/ocular --no-interaction --no-update
+    - travis_retry composer require illuminate/support:${ILLUMINATE_SUPPORT} --no-interaction --no-update
+    - travis_retry composer require orchestra/testbench:${ORCHESTRA_TESTBENCH} --no-interaction --no-update --dev
+    - travis_retry composer require phpunit/phpunit:${PHPUNIT} --no-interaction --no-update --dev
     - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction --no-suggest
 
 script:
