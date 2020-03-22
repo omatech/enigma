@@ -97,17 +97,15 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
                 'table' => $this->getModel()->getTable(),
             ]))->findByHash($column, $hash);
 
-            $ids = implode(',', $ids);
+            $ids = (count($ids) == 0) ? -1 : implode(',', $ids);
 
-            if ($ids !== '') {
-                $closure = static function (self $query) use ($ids) {
-                    $query->whereRaw("id IN ($ids)");
-                };
+            $closure = static function (self $query) use ($ids) {
+                $query->whereRaw("id IN ($ids)");
+            };
 
-                $boolean === 'and'
-                ? $this->where($closure)
-                : $this->orWhere($closure);
-            }
+            $boolean === 'and'
+            ? $this->where($closure)
+            : $this->orWhere($closure);
         }
 
         return $this;
