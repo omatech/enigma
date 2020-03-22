@@ -17,22 +17,22 @@ addons:
         organization: "omatech"
         token: ${SONAR_TOKEN}
 
-env:
-    jobs:
-        - COMPOSER_FLAGS="--prefer-stable"
-
 jobs:
     include:
         - php: 7.2
           env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
         - php: 7.2
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
         - php: 7.3
           env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+        - php: 7.3
+          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
         - php: 7.3
           env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
         - php: 7.4
           env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+        - php: 7.4
+          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
         - php: 7.4
           env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
 
@@ -57,7 +57,7 @@ before_script:
     - travis_retry composer require illuminate/support:${ILLUMINATE_SUPPORT} --no-interaction --no-update
     - travis_retry composer require orchestra/testbench:${ORCHESTRA_TESTBENCH} --no-interaction --no-update --dev
     - travis_retry composer require phpunit/phpunit:${PHPUNIT} --no-interaction --no-update --dev
-    - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction --no-suggest
+    - travis_retry composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
 script:
     - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --log-junit=report.xml
