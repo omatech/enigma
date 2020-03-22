@@ -9,3 +9,9 @@ All notable changes to `enigma` will be documented in this file
 ## 1.0.1 - 2020-03-20
 
 - fix for orWhere querys
+
+## 1.1.0 - 2020-03-22
+
+- new command to rehydratate the index of given model
+- fix where on null indexes found
+- support laravel 7
