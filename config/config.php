@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'backend' => 'modern'
+    'backend' => 'modern',
 ];
