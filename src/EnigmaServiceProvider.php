@@ -15,6 +15,18 @@ use Omatech\Enigma\Database\SqlServerConnection;
 class EnigmaServiceProvider extends ServiceProvider
 {
     /**
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../config/config.php' => config_path('enigma.php'),
+            ], 'config');
+        }
+    }
+
+    /**
      * Register the application services.
      */
     public function register(): void
@@ -38,5 +50,7 @@ class EnigmaServiceProvider extends ServiceProvider
         });
 
         $this->commands(ReIndexCommand::class);
+
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'enigma');
     }
 }
