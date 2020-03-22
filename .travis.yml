@@ -48,7 +48,6 @@ before_script:
     - mysql -e 'create database testing;'
     - psql -c 'create database testing;' -U postgres
     - travis_retry composer self-update
-    - travis_retry composer require scrutinizer/ocular --no-interaction --no-update
     - travis_retry composer require illuminate/support:${ILLUMINATE_SUPPORT} --no-interaction --no-update
     - travis_retry composer require phpunit/phpunit:${PHPUNIT} --no-interaction --no-update --dev
     - travis_retry composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
