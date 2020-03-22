@@ -2,11 +2,6 @@ dist: bionic
 os: linux
 language: php
 
-php:
-  - 7.2
-  - 7.3
-  - 7.4
-
 services:
     - mysql
     - postgresql
@@ -20,21 +15,21 @@ addons:
 jobs:
     include:
         - php: 7.2
-          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+          env: ILLUMINATE_SUPPORT=^6.0 PHPUNIT=^8.0
         - php: 7.2
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+          env: ILLUMINATE_SUPPORT=^7.0 PHPUNIT=^8.0
         - php: 7.3
-          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+          env: ILLUMINATE_SUPPORT=^6.0 PHPUNIT=^8.0
         - php: 7.3
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+          env: ILLUMINATE_SUPPORT=^7.0 PHPUNIT=^8.0
         - php: 7.3
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+          env: ILLUMINATE_SUPPORT=^7.0 PHPUNIT=^9.0
         - php: 7.4
-          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+          env: ILLUMINATE_SUPPORT=^6.0 PHPUNIT=^8.0
         - php: 7.4
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+          env: ILLUMINATE_SUPPORT=^7.0 PHPUNIT=^8.0
         - php: 7.4
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+          env: ILLUMINATE_SUPPORT=^7.0 PHPUNIT=^9.0
 
 before_script:
     - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
@@ -55,7 +50,6 @@ before_script:
     - travis_retry composer self-update
     - travis_retry composer require scrutinizer/ocular --no-interaction --no-update
     - travis_retry composer require illuminate/support:${ILLUMINATE_SUPPORT} --no-interaction --no-update
-    - travis_retry composer require orchestra/testbench:${ORCHESTRA_TESTBENCH} --no-interaction --no-update --dev
     - travis_retry composer require phpunit/phpunit:${PHPUNIT} --no-interaction --no-update --dev
     - travis_retry composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
