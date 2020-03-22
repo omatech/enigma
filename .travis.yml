@@ -1,3 +1,5 @@
+dist: bionic
+os: linux
 language: php
 
 php:
@@ -16,10 +18,11 @@ addons:
         token: ${SONAR_TOKEN}
 
 env:
-    matrix:
+    jobs:
         - COMPOSER_FLAGS="--prefer-stable"
 
-include:
+jobs:
+    include:
         - php: 7.2
           env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
         - php: 7.2
