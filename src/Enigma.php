@@ -145,10 +145,12 @@ class Enigma
 
         [$value, $hash] = $field->prepareForStorage($value);
 
-        $hashes[] = $hash[$column];
-        $hash[$column] = $hashes;
-        $hash[$column] = array_unique($hash[$column]);
-        shuffle($hash[$column]);
+        if (count($hash) !== 0) {
+            $hashes[] = $hash[$column];
+            $hash[$column] = $hashes;
+            $hash[$column] = array_unique($hash[$column]);
+            shuffle($hash[$column]);
+        }
 
         if (! $strategies) {
             return $field;
