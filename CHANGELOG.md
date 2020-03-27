@@ -15,3 +15,7 @@ All notable changes to `enigma` will be documented in this file
 - new command to rehydratate the index of given model
 - fix where on null indexes found
 - support laravel 7
+
+## 1.1.1 - 2020-03-27
+
+- fix encrypt when not blind index is defined
