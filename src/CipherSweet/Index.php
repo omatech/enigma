@@ -11,12 +11,14 @@ class Index
     public $fast = true;
 
     /**
-     * Index constructor.
      * @param string $name
+     * @return Index
      */
-    public function __construct(string $name)
+    public function name(string $name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**

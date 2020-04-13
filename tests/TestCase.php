@@ -31,10 +31,10 @@ class TestCase extends OrchestraTestCase
 
         $app['config']->set('database.connections.mysql', [
             'driver'   => 'mysql',
-            'host'     => env('DB_MYSQL_HOST'),
-            'database' => env('DB_MYSQL_DATABASE'),
-            'username' => env('DB_MYSQL_USER'),
-            'password' => env('DB_MYSQL_PASSWORD'),
+            'host'     => env('DB_MYSQL_HOST', 'mysql'),
+            'database' => env('DB_MYSQL_DATABASE', 'demo'),
+            'username' => env('DB_MYSQL_USER', 'root'),
+            'password' => env('DB_MYSQL_PASSWORD', 'omatech'),
         ]);
 
         $app['config']->set('database.connections.pgsql', [

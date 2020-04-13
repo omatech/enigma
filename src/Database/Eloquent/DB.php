@@ -19,29 +19,19 @@ final class DB extends DBAbstract
 
     /**
      * @param int $modelId
-     * @param array $hashIds
+     * @param string $column
+     * @param array $hashes
+     * @return void
      */
-    public function setModelId(int $modelId, array $hashIds): void
+    public function insertHashes(int $modelId, string $column, array $hashes): void
     {
-        if (! count($hashIds)) {
-            return;
+        foreach (array_chunk($hashes, 100) as $chunks) {
+            $insert = array_map(function ($hash) use ($modelId, $column) {
+                return "('$modelId', '$column', '$hash')";
+            }, $chunks);
+
+            Query::statement("INSERT INTO $this->table (model_id, name, hash) VALUES ".implode(',', $insert));
         }
-
-        $hashIds = implode(',', $hashIds);
-
-        Query::statement("UPDATE $this->table SET model_id = '$modelId' WHERE id IN ($hashIds)");
-    }
-
-    /**
-     * @param string $name
-     * @param string $hash
-     * @return int
-     */
-    public function insertHash(string $name, string $hash): int
-    {
-        Query::statement("INSERT INTO $this->table (name, hash) values ('$name', '$hash')");
-
-        return Query::getPdo()->lastInsertId();
     }
 
     /**
@@ -49,7 +39,7 @@ final class DB extends DBAbstract
      * @param string $column
      * @return void
      */
-    public function deleteHash(int $modelId, string $column): void
+    public function deleteHashes(int $modelId, string $column): void
     {
         Query::statement("DELETE FROM $this->table WHERE model_id = $modelId AND name = '$column'");
     }

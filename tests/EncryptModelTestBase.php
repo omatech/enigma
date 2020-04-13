@@ -2,12 +2,17 @@
 
 namespace Omatech\Enigma\Tests;
 
+use Illuminate\Support\Facades\DB;
+use Omatech\Enigma\CipherSweet\Index;
+use Omatech\Enigma\Jobs\IndexHydrate;
 use Illuminate\Support\Facades\Schema;
-use Omatech\Enigma\Exceptions\InvalidClassException;
-use Omatech\Enigma\Exceptions\RepeatedAttributesException;
+use Omatech\Enigma\Strategies\LikeSearch;
 use Omatech\Enigma\Tests\Stubs\Models\Stub1;
 use Omatech\Enigma\Tests\Stubs\Models\Stub2;
 use Omatech\Enigma\Tests\Stubs\Models\Stub3;
+use ParagonIE\CipherSweet\Transformation\Lowercase;
+use Omatech\Enigma\Tests\Stubs\Strategies\EmailByDomain;
+use Omatech\Enigma\Exceptions\RepeatedAttributesException;
 
 class EncryptModelTestBase extends TestCase
 {
@@ -22,6 +27,8 @@ class EncryptModelTestBase extends TestCase
     /** @test */
     public function encrypt_with_enigma_on_model(): void
     {
+        $this->expectsJobs(IndexHydrate::class);
+
         $stub = new Stub1();
         $stub->name = 'test';
         $stub->save();
@@ -114,6 +121,20 @@ class EncryptModelTestBase extends TestCase
     }
 
     /** @test */
+    public function find_on_non_indexed_value(): void
+    {
+        $stub1 = new Stub1();
+        $stub1->name = 'stub1';
+        $stub1->birthday = '1989-03-08';
+        $stub1->save();
+
+        $foundStub = Stub1::where('birthday', '1989-03-08')
+            ->get();
+
+        $this->assertSame(count($foundStub), 0);
+    }
+
+    /** @test */
     public function update_encrypted_value(): void
     {
         $stub = new Stub1();
@@ -161,22 +182,96 @@ class EncryptModelTestBase extends TestCase
     }
 
     /** @test */
-    public function rehydratate_index_command(): void
+    public function find_for_where_encrypted_value_with_query_builder(): void
+    {
+        $stub = new Stub1();
+        $stub->name = 'test123';
+        $stub->save();
+
+        $index = (new Index)
+            ->transformers([
+                new Lowercase,
+            ])
+            ->strategies([
+                new LikeSearch,
+                new EmailByDomain,
+            ])
+            ->bits(256)
+            ->fast();
+
+        $foundStub = DB::table($stub->getTable())->whereEnigma('name', 'test123', $index)->first();
+
+        $this->assertSame($stub->name, decryptEnigma($stub->getTable(), 'name', $foundStub->name));
+        $this->assertSame($stub->id, (int) $foundStub->id);
+    }
+
+    /** @test */
+    public function find_for_or_where_encrypted_value_with_query_builder(): void
+    {
+        $stub = new Stub1();
+        $stub->name = 'test123';
+        $stub->save();
+
+        $stub = new Stub1();
+        $stub->name = 'test321';
+        $stub->save();
+
+        $index = (new Index)
+            ->transformers([
+                new Lowercase,
+            ])
+            ->strategies([
+                new LikeSearch,
+                new EmailByDomain,
+            ])
+            ->bits(256)
+            ->fast();
+
+        $foundStub = DB::table($stub->getTable())
+            ->whereEnigma('name', 'test654', $index)
+            ->orWhereEnigma('name', 'test321', $index)
+            ->first();
+
+        $this->assertSame($stub->name, decryptEnigma($stub->getTable(), 'name', $foundStub->name));
+        $this->assertSame($stub->id, (int) $foundStub->id);
+    }
+
+    /** @test */
+    public function rehydrate_index_command(): void
     {
         $stub = new Stub1();
         $stub->name = 'test';
         $stub->surnames = 'test';
         $stub->save();
 
-        $this->artisan('enigma:reindex', ['model' => Stub1::class])
+        $this->artisan('enigma:hydrate', ['namespace' => 'Omatech\Enigma\Tests\Stubs\Models'])
+            ->expectsChoice('Which models would you like to hydrate?', "Omatech\Enigma\Tests\Stubs\Models\Stub1", [
+                "All",
+                "Omatech\Enigma\Tests\Stubs\Models\Stub1",
+                "Omatech\Enigma\Tests\Stubs\Models\Stub2",
+                "Omatech\Enigma\Tests\Stubs\Models\Stub3"
+            ])
+            ->expectsOutput('The index hydratation has been finished.')
             ->assertExitCode(0);
     }
 
     /** @test */
-    public function exception_on_rehydratate_index_command(): void
+    public function rehydrate_all_index_command(): void
     {
-        $this->expectException(InvalidClassException::class);
-        $this->artisan('enigma:reindex', ['model' => self::class])
+        $this->expectException(RepeatedAttributesException::class);
+
+        $stub = new Stub1();
+        $stub->name = 'test';
+        $stub->surnames = 'test';
+        $stub->save();
+
+        $this->artisan('enigma:hydrate', ['namespace' => 'Omatech\Enigma\Tests\Stubs\Models'])
+            ->expectsChoice('Which models would you like to hydrate?', "All", [
+                "All",
+                "Omatech\Enigma\Tests\Stubs\Models\Stub1",
+                "Omatech\Enigma\Tests\Stubs\Models\Stub2",
+                "Omatech\Enigma\Tests\Stubs\Models\Stub3",
+            ])
             ->assertExitCode(0);
     }
 }
