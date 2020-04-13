@@ -2,11 +2,11 @@
 
 namespace Omatech\Enigma\Database\Eloquent;
 
-use Omatech\Enigma\Jobs\IndexHydrate;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Omatech\Enigma\Database\Eloquent\Builder as EloquentBuilder;
 use Omatech\Enigma\Enigma;
 use Omatech\Enigma\Exceptions\RepeatedAttributesException;
+use Omatech\Enigma\Jobs\IndexHydrate;
 use ParagonIE\CipherSweet\Exception\BlindIndexNotFoundException;
 use ParagonIE\CipherSweet\Exception\CryptoOperationException;
 use SodiumException;

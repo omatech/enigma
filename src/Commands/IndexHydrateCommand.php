@@ -2,11 +2,11 @@
 
 namespace Omatech\Enigma\Commands;
 
-use Omatech\Enigma\Enigma;
+use HaydenPierce\ClassFinder\ClassFinder;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Omatech\Enigma\Database\Eloquent\HasEnigma;
+use Omatech\Enigma\Enigma;
 use Omatech\Enigma\Exceptions\InvalidClassException;
 
 class IndexHydrateCommand extends Command
@@ -53,7 +53,7 @@ class IndexHydrateCommand extends Command
         }
 
         $choice = (array) $this->choice(
-            "Which models would you like to hydrate?",
+            'Which models would you like to hydrate?',
             array_merge([0 => 'All'], $classes),
             0,
             null,
