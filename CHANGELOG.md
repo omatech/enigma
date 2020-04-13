@@ -19,3 +19,9 @@ All notable changes to `enigma` will be documented in this file
 ## 1.1.1 - 2020-03-27
 
 - fix encrypt when not blind index is defined
+
+## 1.2.0 - 2020-04-13
+
+- rewrite core
+- improved performance using queues to generate indexes
+- added methods whereEnigma orWhereEnigma for query builder where eloquent is not present
