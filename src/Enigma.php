@@ -223,9 +223,11 @@ class Enigma
             return [ $field->prepareForStorage($strategy)[1][$index->name] ];
         }, $index->strategies ?? []);
 
-        $hashes = array_merge(...$hashes) ?? [];
+        if (count($hashes)) {
+            $hashes = call_user_func_array("array_merge", $hashes);
+        }
 
-        return array_merge($hash, $hashes) ?? [];
+        return array_merge($hash, $hashes);
     }
 
     /**

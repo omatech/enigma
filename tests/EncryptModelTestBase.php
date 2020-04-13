@@ -245,12 +245,7 @@ class EncryptModelTestBase extends TestCase
         $stub->save();
 
         $this->artisan('enigma:hydrate', ['namespace' => 'Omatech\Enigma\Tests\Stubs\Models'])
-            ->expectsChoice('Which models would you like to hydrate?', "Omatech\Enigma\Tests\Stubs\Models\Stub1", [
-                "All",
-                "Omatech\Enigma\Tests\Stubs\Models\Stub1",
-                "Omatech\Enigma\Tests\Stubs\Models\Stub2",
-                "Omatech\Enigma\Tests\Stubs\Models\Stub3"
-            ])
+            ->expectsQuestion('Which models would you like to hydrate?', "Omatech\Enigma\Tests\Stubs\Models\Stub1")
             ->expectsOutput('The index hydratation has been finished.')
             ->assertExitCode(0);
     }
@@ -266,12 +261,7 @@ class EncryptModelTestBase extends TestCase
         $stub->save();
 
         $this->artisan('enigma:hydrate', ['namespace' => 'Omatech\Enigma\Tests\Stubs\Models'])
-            ->expectsChoice('Which models would you like to hydrate?', "All", [
-                "All",
-                "Omatech\Enigma\Tests\Stubs\Models\Stub1",
-                "Omatech\Enigma\Tests\Stubs\Models\Stub2",
-                "Omatech\Enigma\Tests\Stubs\Models\Stub3",
-            ])
+            ->expectsQuestion('Which models would you like to hydrate?', "All")
             ->assertExitCode(0);
     }
 }
