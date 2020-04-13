@@ -4,7 +4,7 @@ namespace Omatech\Enigma;
 
 use Illuminate\Database\Connection;
 use Illuminate\Support\ServiceProvider;
-use Omatech\Enigma\Commands\ReIndexCommand;
+use Omatech\Enigma\Commands\IndexHydrateCommand;
 use Omatech\Enigma\Database\Contracts\DBInterface;
 use Omatech\Enigma\Database\Eloquent\DB;
 use Omatech\Enigma\Database\MySqlConnection;
@@ -49,7 +49,7 @@ class EnigmaServiceProvider extends ServiceProvider
             return new SqlServerConnection($connection, $database, $prefix, $config);
         });
 
-        $this->commands(ReIndexCommand::class);
+        $this->commands(IndexHydrateCommand::class);
 
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'enigma');
     }

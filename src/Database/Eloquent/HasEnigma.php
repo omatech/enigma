@@ -3,10 +3,10 @@
 namespace Omatech\Enigma\Database\Eloquent;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Omatech\Enigma\Database\Contracts\DBInterface;
 use Omatech\Enigma\Database\Eloquent\Builder as EloquentBuilder;
 use Omatech\Enigma\Enigma;
 use Omatech\Enigma\Exceptions\RepeatedAttributesException;
+use Omatech\Enigma\Jobs\IndexHydrate;
 use ParagonIE\CipherSweet\Exception\BlindIndexNotFoundException;
 use ParagonIE\CipherSweet\Exception\CryptoOperationException;
 use SodiumException;
@@ -15,7 +15,6 @@ use Throwable;
 trait HasEnigma
 {
     private $engine;
-    public static $indexIds = [];
 
     /**
      * Get the table associated with the model.
@@ -78,9 +77,8 @@ trait HasEnigma
         });
 
         static::saved(static function ($model) {
-            (app()->makeWith(DBInterface::class, [
-                'table' => $model->getTable(),
-            ]))->setModelId($model->id, static::$indexIds);
+            dispatch(new IndexHydrate(get_class($model), $model->id))
+                ->onQueue('enigma');
 
             $model->decrypt(
                 $model->attributes
@@ -98,11 +96,13 @@ trait HasEnigma
      */
     public function encrypt(array $attributes = ['*']): self
     {
-        static::$indexIds = [];
-
         foreach ($this->getEnigmaEncryptable() as $column) {
             if (isset($attributes[$column])) {
-                $this->encryptWithIndexes($this->id, $column);
+                $this->{$column} = $this->engine->encrypt(
+                    $this->getTable(),
+                    $column,
+                    $this->{$column}
+                );
             }
         }
 
@@ -113,37 +113,6 @@ trait HasEnigma
         }
 
         return $this;
-    }
-
-    /**
-     * @param int $id
-     * @param string $column
-     * @throws BlindIndexNotFoundException
-     * @throws CryptoOperationException
-     * @throws SodiumException
-     * @throws \ParagonIE\CipherSweet\Exception\BlindIndexNameCollisionException
-     */
-    private function encryptWithIndexes(?int $id, string $column): void
-    {
-        if ($id !== null) {
-            (app()->makeWith(DBInterface::class, [
-                'table' => $this->getTable(),
-            ]))->deleteHash($id, $column);
-        }
-
-        [$value, $hashes] = $this->engine->encryptWithIndexes(
-            $this,
-            $column,
-            $this->{$column}
-        );
-
-        $this->{$column} = $value;
-
-        if (count($hashes)) {
-            foreach ($hashes as $idHash) {
-                static::$indexIds[] = $idHash;
-            }
-        }
     }
 
     /**

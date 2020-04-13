@@ -7,10 +7,10 @@ use Omatech\Enigma\Strategies\Contracts\StrategyInterface;
 class EmailByDomain implements StrategyInterface
 {
     /**
-     * @param $input
+     * @param string $input
      * @return string
      */
-    public function __invoke($input)
+    public function __invoke(string $input)
     {
         return last(explode('@', $input));
     }
