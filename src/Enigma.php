@@ -40,208 +40,190 @@ class Enigma
 
     /**
      * @param string $tableName
-     * @param string $column
+     * @param string $columnName
      * @param string $value
      * @return string
      * @throws BlindIndexNotFoundException
      * @throws CryptoOperationException
      * @throws SodiumException
      */
-    public function encrypt(string $tableName, string $column, string $value): string
+    public function encrypt(string $tableName, string $columnName, string $value): string
     {
         [$value] = (new EncryptedField(
             $this->engine,
             $tableName,
-            $column
+            $columnName
         ))->prepareForStorage($value);
 
         return $value;
     }
 
     /**
-     * @param Model $model
-     * @param string $column
-     * @param string $value
-     * @return array
-     * @throws BlindIndexNameCollisionException
-     * @throws BlindIndexNotFoundException
-     * @throws CryptoOperationException
-     * @throws SodiumException
-     */
-    public function encryptWithIndexes(Model $model, string $column, string $value): array
-    {
-        [$value, $indexes] = $this->createWithIndexes($model, $column, $value);
-
-        $ids = [];
-
-        if ($indexes) {
-            foreach ($indexes[$column] as $index) {
-                $ids[] = (app()->makeWith(DBInterface::class, [
-                    TABLE => $model->getTable(),
-                ]))->insertHash($column, $index);
-            }
-        }
-
-        return [$value, $ids];
-    }
-
-    /**
-     * @param Model $model
-     * @param string $column
-     * @param string $value
-     * @param bool $strategies
-     * @return array|EncryptedField
-     * @throws BlindIndexNameCollisionException
-     * @throws BlindIndexNotFoundException
-     * @throws CryptoOperationException
-     * @throws SodiumException
-     */
-    private function createWithIndexes(Model $model, string $column, string $value, bool $strategies = true)
-    {
-        $tableName = $model->getTable();
-
-        $field = new EncryptedField(
-            $this->engine,
-            $tableName,
-            $column
-        );
-
-        return $this->createBlindIndexes($model, $column, $value, $field, $strategies);
-    }
-
-    /**
-     * @param Model $model
-     * @param string $column
-     * @param string $value
-     * @param EncryptedField $field
-     * @param bool $strategies
-     * @return array|EncryptedField
-     * @throws BlindIndexNameCollisionException
-     * @throws BlindIndexNotFoundException
-     * @throws CryptoOperationException
-     * @throws SodiumException
-     */
-    private function createBlindIndexes(Model $model, string $column, string $value, EncryptedField $field, bool $strategies)
-    {
-        $hashes = [];
-        $blindIndexMethod = $this->getBlindIndexMethod($column);
-
-        if (method_exists($model, $blindIndexMethod)) {
-            $index = new Index($column);
-            $model->{$blindIndexMethod}($index);
-
-            $blindIndex = new BlindIndex(
-                $index->name,
-                $index->transformers,
-                $index->bits,
-                $index->fast
-            );
-            $field->addBlindIndex($blindIndex);
-
-            if ($strategies) {
-                $hashes = $this->createBlindStrategies($field, $index, $blindIndex->getTransformed($value));
-            }
-        }
-
-        [$value, $hash] = $field->prepareForStorage($value);
-
-        if (count($hash) !== 0) {
-            $hashes[] = $hash[$column];
-            $hash[$column] = $hashes;
-            $hash[$column] = array_unique($hash[$column]);
-            shuffle($hash[$column]);
-        }
-
-        if (! $strategies) {
-            return $field;
-        }
-
-        return [$value, $hash];
-    }
-
-    /**
-     * @param EncryptedField $field
-     * @param Index $index
-     * @param string $value
-     * @return array
-     */
-    public function createBlindStrategies(EncryptedField $field, Index $index, string $value): array
-    {
-        $hashes = last(array_map(static function ($strategy) use ($value, $field) {
-            $strategy = $strategy->__invoke($value);
-            if (is_array($strategy)) {
-                return array_map(static function ($val) use ($field) {
-                    return last(/** @scrutinizer ignore-type */$field->prepareForStorage($val)[1]);
-                }, $strategy);
-            }
-
-            return [last(/** @scrutinizer ignore-type */$field->prepareForStorage($strategy)[1])];
-        }, $index->strategies ?? []));
-
-        return (! $hashes) ? [] : $hashes;
-    }
-
-    /**
-     * @param Model $model
-     * @param string $column
-     * @param $value
-     * @param bool $strategies
-     * @return string|null
-     * @throws BlindIndexNameCollisionException
-     * @throws BlindIndexNotFoundException
-     * @throws CryptoOperationException
-     * @throws SodiumException
-     */
-    public function getHash(Model $model, string $column, string $value, bool $strategies = true): ?string
-    {
-        $index = $this->createWithIndexes(
-            $model,
-            $column,
-            $value,
-            $strategies
-        )->getAllBlindIndexes($value);
-
-        return (empty($index)) ? null : $index[$column];
-    }
-
-    /**
      * @param string $tableName
-     * @param string $column
+     * @param string $columnName
      * @param string $value
      * @return Model
      * @throws CryptoOperationException
      */
-    public function decrypt(string $tableName, string $column, string $value): string
+    public function decrypt(string $tableName, string $columnName, string $value): string
     {
         return (new EncryptedField(
             $this->engine,
             $tableName,
-            $column
+            $columnName
         ))->decryptValue($value);
     }
 
     /**
-     * @param $model
-     * @param $modelId
-     * @param $column
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $value
+     * @param Index $index
+     * @return int|string
+     * @throws BlindIndexNameCollisionException
+     * @throws CryptoOperationException
      */
-    public function deleteHash($model, $modelId, $column): void
+    public function search(string $tableName, string $columnName, string $value, Index $index)
     {
-        (app()->makeWith(DBInterface::class, [
-            TABLE => $model->getTable(),
-        ]))->deleteHash($modelId, $column);
+        $hash = $this->createHash($tableName, $columnName, $value, $index);
+
+        $ids = (app()->makeWith(DBInterface::class, [
+            TABLE => $tableName,
+        ]))->findByHash($columnName, $hash);
+
+        return (count($ids) === 0) ? -1 : implode(',', $ids);
     }
 
     /**
-     * @param $model
-     * @param $modelId
-     * @param $ids
+     * @param Model $model
+     * @param string $columnName
+     * @param string $value
+     * @return int|string|null
+     * @throws BlindIndexNameCollisionException
+     * @throws CryptoOperationException
      */
-    public function setModelId($model, $modelId, $ids): void
+    public function searchAsModel(Model $model, string $columnName, string $value)
     {
+        $blindIndexMethod = $this->getBlindIndexMethod($columnName);
+
+        if (method_exists($model, $blindIndexMethod)) {
+            $index = new Index;
+            $index->name($columnName);
+
+            $model->{$blindIndexMethod}($index);
+
+            return $this->search($model->getTable(), $columnName, $value, $index);
+        }
+
+        return -1;
+    }
+
+    /**
+     * @param Model $model
+     * @param string $columnName
+     * @param string $value
+     * @throws BlindIndexNameCollisionException
+     * @throws CryptoOperationException
+     */
+    public function hydrateAsModel(Model $model, string $columnName, string $value): void
+    {
+        $blindIndexMethod = $this->getBlindIndexMethod($columnName);
+
         (app()->makeWith(DBInterface::class, [
             TABLE => $model->getTable(),
-        ]))->setModelId($modelId, $ids);
+        ]))->deleteHashes($model->id, $columnName);
+
+        if (method_exists($model, $blindIndexMethod)) {
+            $index = new Index;
+            $index->name($columnName);
+            $model->{$blindIndexMethod}($index);
+
+            $hashes = $this->createHashes($model->getTable(), $columnName, $value, $index);
+            $hashes = array_unique($hashes);
+            shuffle($hashes);
+
+            (app()->makeWith(DBInterface::class, [
+                TABLE => $model->getTable(),
+            ]))->insertHashes($model->id, $columnName, $hashes);
+        }
+    }
+
+    /**
+     * @param $tableName
+     * @param $columnName
+     * @param $index
+     * @return array
+     * @throws BlindIndexNameCollisionException
+     * @throws CryptoOperationException
+     */
+    private function transform(string $tableName, string $columnName, Index $index): array
+    {
+        $field = new EncryptedField(
+            $this->engine,
+            $tableName,
+            $columnName
+        );
+
+        $index->name($columnName);
+
+        $blindIndex = new BlindIndex(
+            $index->name,
+            $index->transformers,
+            $index->bits,
+            $index->fast
+        );
+
+        $field->addBlindIndex($blindIndex);
+
+        return [$field, $blindIndex];
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $value
+     * @param Index $index
+     * @return mixed
+     * @throws BlindIndexNameCollisionException
+     * @throws CryptoOperationException
+     */
+    private function createHash(string $tableName, string $columnName, string $value, Index $index)
+    {
+        [$field] = $this->transform($tableName, $columnName, $index);
+
+        return $field->prepareForStorage($value)[1][$index->name];
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $value
+     * @param Index $index
+     * @return array
+     * @throws BlindIndexNameCollisionException
+     * @throws CryptoOperationException
+     */
+    private function createHashes(string $tableName, string $columnName, string $value, Index $index): array
+    {
+        [$field, $blindIndex] = $this->transform($tableName, $columnName, $index);
+
+        $value = $blindIndex->getTransformed($value);
+
+        $hash = [ $field->prepareForStorage($value)[1][$index->name] ];
+
+        $hashes = array_map(static function ($strategy) use ($value, $field, $index) {
+            $strategy = $strategy->__invoke($value);
+
+            if (is_array($strategy)) {
+                return array_map(static function ($val) use ($field, $index) {
+                    return $field->prepareForStorage($val)[1][$index->name];
+                }, $strategy ?? []);
+            }
+
+            return [ $field->prepareForStorage($strategy)[1][$index->name] ];
+        }, $index->strategies ?? []);
+
+        return array_merge($hash, array_merge(...$hashes));
     }
 
     /**

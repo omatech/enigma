@@ -3,7 +3,6 @@
 namespace Omatech\Enigma\Database\Eloquent;
 
 use Closure;
-use Omatech\Enigma\Database\Contracts\DBInterface;
 use Omatech\Enigma\Enigma;
 
 /**
@@ -89,16 +88,10 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
      */
     private function findByHash($column, $value, $boolean = 'and'): self
     {
-        $hash = (new Enigma)
-            ->getHash($this->getModel(), $column, $value, false);
+        $ids = (new Enigma)
+            ->searchAsModel($this->getModel(), $column, $value);
 
-        if ($hash !== null) {
-            $ids = (app()->makeWith(DBInterface::class, [
-                'table' => $this->getModel()->getTable(),
-            ]))->findByHash($column, $hash);
-
-            $ids = (count($ids) == 0) ? -1 : implode(',', $ids);
-
+        if ($ids !== null) {
             $closure = static function (self $query) use ($ids) {
                 $query->whereRaw("id IN ($ids)");
             };

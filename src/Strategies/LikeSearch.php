@@ -7,10 +7,10 @@ use Omatech\Enigma\Strategies\Contracts\StrategyInterface;
 class LikeSearch implements StrategyInterface
 {
     /**
-     * @param $input
+     * @param string $input
      * @return array
      */
-    public function __invoke($input)
+    public function __invoke(string $input): array
     {
         $possibilities = [];
         $len = strlen($input);
