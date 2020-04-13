@@ -3,16 +3,16 @@
 namespace Omatech\Enigma\Tests;
 
 use Illuminate\Support\Facades\DB;
-use Omatech\Enigma\CipherSweet\Index;
-use Omatech\Enigma\Jobs\IndexHydrate;
 use Illuminate\Support\Facades\Schema;
+use Omatech\Enigma\CipherSweet\Index;
+use Omatech\Enigma\Exceptions\RepeatedAttributesException;
+use Omatech\Enigma\Jobs\IndexHydrate;
 use Omatech\Enigma\Strategies\LikeSearch;
 use Omatech\Enigma\Tests\Stubs\Models\Stub1;
 use Omatech\Enigma\Tests\Stubs\Models\Stub2;
 use Omatech\Enigma\Tests\Stubs\Models\Stub3;
-use ParagonIE\CipherSweet\Transformation\Lowercase;
 use Omatech\Enigma\Tests\Stubs\Strategies\EmailByDomain;
-use Omatech\Enigma\Exceptions\RepeatedAttributesException;
+use ParagonIE\CipherSweet\Transformation\Lowercase;
 
 class EncryptModelTestBase extends TestCase
 {
@@ -261,7 +261,7 @@ class EncryptModelTestBase extends TestCase
         $stub->save();
 
         $this->artisan('enigma:hydrate', ['namespace' => 'Omatech\Enigma\Tests\Stubs\Models'])
-            ->expectsQuestion('Which models would you like to hydrate?', "All")
+            ->expectsQuestion('Which models would you like to hydrate?', 'All')
             ->assertExitCode(0);
     }
 }

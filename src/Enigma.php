@@ -209,7 +209,7 @@ class Enigma
 
         $value = $blindIndex->getTransformed($value);
 
-        $hash = [ $field->prepareForStorage($value)[1][$index->name] ];
+        $hash = [$field->prepareForStorage($value)[1][$index->name]];
 
         $hashes = array_map(static function ($strategy) use ($value, $field, $index) {
             $strategy = $strategy->__invoke($value);
@@ -220,11 +220,11 @@ class Enigma
                 }, $strategy ?? []);
             }
 
-            return [ $field->prepareForStorage($strategy)[1][$index->name] ];
+            return [$field->prepareForStorage($strategy)[1][$index->name]];
         }, $index->strategies ?? []);
 
         if (count($hashes)) {
-            $hashes = call_user_func_array("array_merge", $hashes);
+            $hashes = call_user_func_array('array_merge', $hashes);
         }
 
         return array_merge($hash, $hashes);

@@ -2,7 +2,6 @@
 
 namespace Omatech\Enigma\Database\Query;
 
-use Closure;
 use Omatech\Enigma\CipherSweet\Index;
 use Omatech\Enigma\Enigma;
 
@@ -46,7 +45,7 @@ class Builder extends \Illuminate\Database\Query\Builder
      * @throws \ParagonIE\CipherSweet\Exception\BlindIndexNameCollisionException
      * @throws \ParagonIE\CipherSweet\Exception\CryptoOperationException
      */
-    private function findByHash(string $column, string $value, Index $index, string $boolean): Builder
+    private function findByHash(string $column, string $value, Index $index, string $boolean): self
     {
         $ids = (new Enigma)->search($this->from, $column, $value, $index);
 
