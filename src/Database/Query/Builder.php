@@ -47,17 +47,22 @@ class Builder extends \Illuminate\Database\Query\Builder
      */
     private function findByHash(string $column, string $value, Index $index, string $boolean): self
     {
-        $ids = (new Enigma)->search($this->from, $column, $value, $index);
+        $table = $this->from;
+        $tableColumn = explode('.', $column);
 
-        if ($ids !== null) {
-            $closure = static function (self $query) use ($ids) {
-                $query->whereRaw("id IN ($ids)");
-            };
-
-            $boolean === 'and'
-            ? $this->where($closure)
-            : $this->orWhere($closure);
+        if (count($tableColumn) === 2) {
+            [$table, $column] = $tableColumn;
         }
+
+        $ids = (new Enigma)->search($table, $column, $value, $index);
+
+        $closure = static function (self $query) use ($table, $ids) {
+            $query->whereRaw("$table.id IN ($ids)");
+        };
+
+        $boolean === 'and'
+        ? $this->where($closure)
+        : $this->orWhere($closure);
 
         return $this;
     }

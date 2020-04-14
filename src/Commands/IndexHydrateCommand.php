@@ -42,7 +42,7 @@ class IndexHydrateCommand extends Command
      */
     public function handle()
     {
-        $namespace = $this->argument('namespace');
+        $namespace = (string) $this->argument('namespace');
         $foundClasses = ClassFinder::getClassesInNamespace($namespace, ClassFinder::RECURSIVE_MODE);
 
         $classes = [];
@@ -76,7 +76,7 @@ class IndexHydrateCommand extends Command
         $enigmaEncryptable = $model->getEnigmaEncryptable();
 
         $this->info(get_class($model)."\n");
-        $bar = $this->output->createProgressBar($model::count());
+        $bar = $this->output->createProgressBar((int) $model::count());
         $bar->start();
 
         $model::chunk(100, function ($rows) use ($enigmaEncryptable, $bar) {
