@@ -228,7 +228,7 @@ class EncryptModelTestBase extends TestCase
             ->fast();
 
         $foundStub = DB::table($stub->getTable())
-            ->whereEnigma('name', 'test654', $index)
+            ->whereEnigma($stub->getTable().'.name', 'test654', $index)
             ->orWhereEnigma('name', 'test321', $index)
             ->first();
 

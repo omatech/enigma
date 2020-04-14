@@ -91,15 +91,13 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
         $ids = (new Enigma)
             ->searchAsModel($this->getModel(), $column, $value);
 
-        if ($ids !== null) {
-            $closure = static function (self $query) use ($ids) {
-                $query->whereRaw("id IN ($ids)");
-            };
+        $closure = static function (self $query) use ($ids) {
+            $query->whereRaw("id IN ($ids)");
+        };
 
-            $boolean === 'and'
-            ? $this->where($closure)
-            : $this->orWhere($closure);
-        }
+        $boolean === 'and'
+        ? $this->where($closure)
+        : $this->orWhere($closure);
 
         return $this;
     }
