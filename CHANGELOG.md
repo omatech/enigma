@@ -25,3 +25,7 @@ All notable changes to `enigma` will be documented in this file
 - rewrite core
 - improved performance using queues to generate indexes
 - added methods whereEnigma orWhereEnigma for query builder where eloquent is not present
+
+## 1.2.1 - 2020-04-14
+
+- fix joins on query builder table.column
