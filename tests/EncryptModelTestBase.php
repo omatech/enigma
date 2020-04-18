@@ -246,7 +246,7 @@ class EncryptModelTestBase extends TestCase
 
         $this->artisan('enigma:hydrate', ['namespace' => 'Omatech\Enigma\Tests\Stubs\Models'])
             ->expectsQuestion('Which models would you like to hydrate?', "Omatech\Enigma\Tests\Stubs\Models\Stub1")
-            ->expectsOutput('The index hydratation has been finished.')
+            ->expectsOutput('The hydration indexes has been enqueued / completed.')
             ->assertExitCode(0);
     }
 
