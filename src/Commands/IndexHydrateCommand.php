@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Omatech\Enigma\Database\Eloquent\HasEnigma;
 use Omatech\Enigma\Enigma;
 use Omatech\Enigma\Exceptions\InvalidClassException;
+use Omatech\Enigma\Jobs\IndexHydrate;
 
 class IndexHydrateCommand extends Command
 {
@@ -68,24 +69,19 @@ class IndexHydrateCommand extends Command
             $this->hydrate(new $class);
         }
 
-        $this->info('The index hydratation has been finished.');
+        $this->info('The hydration indexes has been enqueued / completed.');
     }
 
     private function hydrate(Model $model)
     {
-        $enigmaEncryptable = $model->getEnigmaEncryptable();
-
         $this->info(get_class($model)."\n");
         $bar = $this->output->createProgressBar((int) $model::count());
         $bar->start();
 
-        $model::chunk(100, function ($rows) use ($enigmaEncryptable, $bar) {
+        $model::chunk(100, function ($rows) use ($model, $bar) {
             foreach ($rows as $row) {
-                foreach ($enigmaEncryptable as $column) {
-                    if ($row->{$column} !== null) {
-                        $this->enigma->hydrateAsModel($row, $column, $row->{$column});
-                    }
-                }
+                dispatch(new IndexHydrate(get_class($model), $row->id))
+                    ->onQueue('enigma');
                 $bar->advance();
             }
         });
