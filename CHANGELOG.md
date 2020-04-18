@@ -29,3 +29,7 @@ All notable changes to `enigma` will be documented in this file
 ## 1.2.1 - 2020-04-14
 
 - fix joins on query builder table.column
+
+## 1.2.2 - 2020-04-19
+
+- fix hydration command to use queue
