@@ -2,13 +2,13 @@
 
 namespace Omatech\Enigma\Commands;
 
-use Omatech\Enigma\Enigma;
-use Illuminate\Console\Command;
-use Omatech\Enigma\Jobs\IndexHydrate;
-use Illuminate\Database\Eloquent\Model;
 use HaydenPierce\ClassFinder\ClassFinder;
+use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Omatech\Enigma\Database\Eloquent\HasEnigma;
+use Omatech\Enigma\Enigma;
 use Omatech\Enigma\Exceptions\InvalidClassException;
+use Omatech\Enigma\Jobs\IndexHydrate;
 
 class IndexHydrateCommand extends Command
 {
