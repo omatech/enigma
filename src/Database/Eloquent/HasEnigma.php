@@ -77,7 +77,7 @@ trait HasEnigma
         });
 
         static::saved(static function ($model) {
-            if (!empty($model->getEnigmaEncryptable())) {
+            if (! empty($model->getEnigmaEncryptable())) {
                 dispatch(new IndexHydrate(get_class($model), $model->id))
                     ->onQueue('enigma');
             }
