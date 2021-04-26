@@ -77,8 +77,10 @@ trait HasEnigma
         });
 
         static::saved(static function ($model) {
-            dispatch(new IndexHydrate(get_class($model), $model->id))
-                ->onQueue('enigma');
+            if (!empty($model->getEnigmaEncryptable())) {
+                dispatch(new IndexHydrate(get_class($model), $model->id))
+                    ->onQueue('enigma');
+            }
 
             $model->decrypt(
                 $model->attributes

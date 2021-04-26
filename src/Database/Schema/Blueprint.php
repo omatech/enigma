@@ -11,16 +11,17 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      */
     public function enigma(): void
     {
-        $indexTable = $this->getTable().'_index';
+        $indexTable = $this->getTable() . '_index';
 
-        if (! Schema::hasTable($indexTable)) {
+        if (!Schema::hasTable($indexTable)) {
             Schema::create($indexTable, static function ($table) {
                 $table->bigIncrements('id');
                 $table->unsignedBigInteger('model_id')->nullable();
                 $table->string('name', 64);
                 $table->string('hash', 704);
 
-                $table->index(['name', 'hash']);
+                $table->index(['name', 'hash', 'model_id']);
+                $table->index(['model_id', 'name']);
             });
         }
     }
