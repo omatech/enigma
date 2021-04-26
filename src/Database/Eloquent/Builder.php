@@ -29,7 +29,7 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
         $enigma = (array) $this->model->getEnigmaEncryptable();
 
         if (
-            !$column instanceof Closure &&
+            ! $column instanceof Closure &&
             in_array($column, $enigma, true) !== false
         ) {
             [$value, $operator] = $this->query->prepareValueAndOperator(
@@ -63,7 +63,7 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
         $enigma = (array) $this->model->getEnigmaEncryptable();
 
         if (
-            !$column instanceof Closure &&
+            ! $column instanceof Closure &&
             in_array($column, $enigma, true) !== false
         ) {
             [$value, $operator] = $this->query->prepareValueAndOperator(
