@@ -20,7 +20,8 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
                 $table->string('name', 64);
                 $table->string('hash', 704);
 
-                $table->index(['name', 'hash']);
+                $table->index(['name', 'hash', 'model_id']);
+                $table->index(['model_id', 'name']);
             });
         }
     }

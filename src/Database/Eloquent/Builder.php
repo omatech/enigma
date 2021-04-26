@@ -28,8 +28,10 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
     {
         $enigma = (array) $this->model->getEnigmaEncryptable();
 
-        if (! $column instanceof Closure &&
-            in_array($column, $enigma, true) !== false) {
+        if (
+            ! $column instanceof Closure &&
+            in_array($column, $enigma, true) !== false
+        ) {
             [$value, $operator] = $this->query->prepareValueAndOperator(
                 $value,
                 $operator,
@@ -60,8 +62,10 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
     {
         $enigma = (array) $this->model->getEnigmaEncryptable();
 
-        if (! $column instanceof Closure &&
-            in_array($column, $enigma, true) !== false) {
+        if (
+            ! $column instanceof Closure &&
+            in_array($column, $enigma, true) !== false
+        ) {
             [$value, $operator] = $this->query->prepareValueAndOperator(
                 $value,
                 $operator,
@@ -91,13 +95,13 @@ class Builder extends \Illuminate\Database\Eloquent\Builder
         $ids = (new Enigma)
             ->searchAsModel($this->getModel(), $column, $value);
 
-        $closure = static function (self $query) use ($ids) {
-            $query->whereRaw("id IN ($ids)");
+        $closure = function (self $query) use ($ids) {
+            $query->whereRaw("{$this->model->getTable()}.id IN ($ids)");
         };
 
         $boolean === 'and'
-        ? $this->where($closure)
-        : $this->orWhere($closure);
+            ? $this->where($closure)
+            : $this->orWhere($closure);
 
         return $this;
     }
