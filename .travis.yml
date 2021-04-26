@@ -3,60 +3,60 @@ os: linux
 language: php
 
 services:
-    - mysql
-    - postgresql
-    - docker
+  - mysql
+  - postgresql
+  - docker
 
 addons:
-    sonarcloud:
-        organization: "omatech"
-        token: ${SONAR_TOKEN}
+  sonarcloud:
+    organization: "omatech"
+    token: ${SONAR_TOKEN}
 
 jobs:
-    include:
-        - php: 7.2
-          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
-        - php: 7.2
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
-        - php: 7.3
-          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
-        - php: 7.3
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
-        - php: 7.3
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
-        - php: 7.4
-          env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
-        - php: 7.4
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
-        - php: 7.4
-          env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+  include:
+    - php: 7.2
+      env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+    - php: 7.2
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+    - php: 7.3
+      env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+    - php: 7.3
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+    - php: 7.3
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+    - php: 7.4
+      env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+    - php: 7.4
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+    - php: 7.4
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
 
 before_script:
-    - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-    - sudo curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list
-    - sudo apt-get update
-    - sudo ACCEPT_EULA=Y apt-get -y install msodbcsql17
-    - sudo apt-get -y install unixodbc-dev
-    - pecl install sqlsrv
-    - pecl install pdo_sqlsrv
+  - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+  - sudo curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list
+  - sudo apt-get update
+  - sudo ACCEPT_EULA=Y apt-get -y install msodbcsql17
+  - sudo apt-get -y install unixodbc-dev
+  - pecl install sqlsrv-5.8.1
+  - pecl install pdo_sqlsrv-5.8.1
 
-    - docker run --name sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
-    - docker cp tests/Stubs/setup.sql sqlserver:/tmp
-    - sleep 20
-    - docker exec sqlserver opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i tmp/setup.sql
+  - docker run --name sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
+  - docker cp tests/Stubs/setup.sql sqlserver:/tmp
+  - sleep 20
+  - docker exec sqlserver opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i tmp/setup.sql
 
-    - mysql -e 'create database testing;'
-    - psql -c 'create database testing;' -U postgres
-    - travis_retry composer self-update
-    - travis_retry composer require scrutinizer/ocular:dev-master --no-interaction --no-update
-    - travis_retry composer require illuminate/support:${ILLUMINATE_SUPPORT} --no-interaction --no-update
-    - travis_retry composer require orchestra/testbench:${ORCHESTRA_TESTBENCH} --no-interaction --no-update --dev
-    - travis_retry composer require phpunit/phpunit:${PHPUNIT} --no-interaction --no-update --dev
-    - travis_retry composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
+  - mysql -e 'create database testing;'
+  - psql -c 'create database testing;' -U postgres
+  - travis_retry composer self-update
+  - travis_retry composer require scrutinizer/ocular:dev-master --no-interaction --no-update
+  - travis_retry composer require illuminate/support:${ILLUMINATE_SUPPORT} --no-interaction --no-update
+  - travis_retry composer require orchestra/testbench:${ORCHESTRA_TESTBENCH} --no-interaction --no-update --dev
+  - travis_retry composer require phpunit/phpunit:${PHPUNIT} --no-interaction --no-update --dev
+  - travis_retry composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
 script:
-    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --log-junit=report.xml
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover --log-junit=report.xml
 
 after_script:
-    - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
-    - sonar-scanner
+  - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+  - sonar-scanner
