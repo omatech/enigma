@@ -39,3 +39,8 @@ All notable changes to `enigma` will be documented in this file
 - fix eloquent query on joined tables
 - improved index for queries
 - fix avoid non enigma encryptable field generates a job
+-
+## 1.3.0 - 2021-05-12
+
+- support php 8
+- support laravel 8
