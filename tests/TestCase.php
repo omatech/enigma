@@ -10,13 +10,11 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
-    use DatabaseTransactions;
-
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__.'/Stubs/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/Stubs/Migrations');
         $this->artisan('migrate');
     }
 
@@ -55,7 +53,7 @@ class TestCase extends OrchestraTestCase
 
         $app['config']->set('database.connections.sqlite', [
             'driver'   => 'sqlite',
-            'database' => __DIR__.'/Stubs/database.sqlite',
+            'database' => __DIR__ . '/Stubs/database.sqlite',
         ]);
     }
 }
