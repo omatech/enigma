@@ -47,10 +47,11 @@ before_script:
   - sudo apt-get update
   - sudo ACCEPT_EULA=Y apt-get -y install unixodbc-dev msodbcsql17
   - sudo apt-get -y install unixodbc-dev
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install sqlsrv-5.8.1; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install pdo_sqlsrv-5.8.1; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} < "8.0" ]]; then pecl install sqlsrv-5.9.0; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} < "8.0" ]]; then pecl install pdo_sqlsrv-5.9.0; fi
+
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} < "8.0" ]]; then pecl install sqlsrv-5.8.1; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} < "8.0" ]]; then pecl install pdo_sqlsrv-5.8.1; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install sqlsrv-5.9.0; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install pdo_sqlsrv-5.9.0; fi
 
   - docker run --name sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
   - docker cp tests/Stubs/setup.sql sqlserver:/tmp
