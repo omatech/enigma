@@ -4,14 +4,11 @@ namespace Omatech\Enigma\Tests;
 
 include_once 'src/Helpers/enigma.php';
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Omatech\Enigma\EnigmaServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
-    use DatabaseTransactions;
-
     public function setUp(): void
     {
         parent::setUp();

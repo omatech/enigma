@@ -30,15 +30,28 @@ jobs:
       env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
     - php: 7.4
       env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+    - php: 8.0
+      env: ILLUMINATE_SUPPORT=^6.0 ORCHESTRA_TESTBENCH=^4.0 PHPUNIT=^8.0
+    - php: 8.0
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^8.0
+    - php: 8.0
+      env: ILLUMINATE_SUPPORT=^7.0 ORCHESTRA_TESTBENCH=^5.0 PHPUNIT=^9.0
+    - php: 8.0
+      env: ILLUMINATE_SUPPORT=^8.0 ORCHESTRA_TESTBENCH=^6.0 PHPUNIT=^8.0
+    - php: 8.0
+      env: ILLUMINATE_SUPPORT=^8.0 ORCHESTRA_TESTBENCH=^6.0 PHPUNIT=^9.0
 
 before_script:
   - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
   - sudo curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list
   - sudo apt-get update
-  - sudo ACCEPT_EULA=Y apt-get -y install msodbcsql17
+  - sudo ACCEPT_EULA=Y apt-get -y install unixodbc-dev msodbcsql17
   - sudo apt-get -y install unixodbc-dev
-  - pecl install sqlsrv-5.8.1
-  - pecl install pdo_sqlsrv-5.8.1
+
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} < "8.0" ]]; then pecl install sqlsrv-5.8.1; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} < "8.0" ]]; then pecl install pdo_sqlsrv-5.8.1; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install sqlsrv-5.9.0; fi
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install pdo_sqlsrv-5.9.0; fi
 
   - docker run --name sqlserver -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
   - docker cp tests/Stubs/setup.sql sqlserver:/tmp
