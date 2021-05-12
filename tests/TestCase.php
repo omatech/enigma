@@ -4,7 +4,6 @@ namespace Omatech\Enigma\Tests;
 
 include_once 'src/Helpers/enigma.php';
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Omatech\Enigma\EnigmaServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
@@ -14,7 +13,7 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/Stubs/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Stubs/Migrations');
         $this->artisan('migrate');
     }
 
@@ -53,7 +52,7 @@ class TestCase extends OrchestraTestCase
 
         $app['config']->set('database.connections.sqlite', [
             'driver'   => 'sqlite',
-            'database' => __DIR__ . '/Stubs/database.sqlite',
+            'database' => __DIR__.'/Stubs/database.sqlite',
         ]);
     }
 }
