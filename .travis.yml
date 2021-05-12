@@ -45,7 +45,7 @@ before_script:
   - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
   - sudo curl https://packages.microsoft.com/config/debian/10/prod.list | sudo tee -a /etc/apt/sources.list.d/mssql-release.list
   - sudo apt-get update
-  - sudo ACCEPT_EULA=Y apt-get -y install msodbcsql17
+  - sudo ACCEPT_EULA=Y apt-get -y install unixodbc-dev msodbcsql17
   - sudo apt-get -y install unixodbc-dev
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install sqlsrv-5.8.1; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "8.0" ]]; then pecl install pdo_sqlsrv-5.8.1; fi
