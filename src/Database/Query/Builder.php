@@ -53,6 +53,8 @@ class Builder extends \Illuminate\Database\Query\Builder
         if (count($tableColumn) === 2) {
             [$table, $column] = $tableColumn;
         }
+        
+        $table = explode(' as laravel_reserved', $table)[0];
 
         $ids = (new Enigma)->search($table, $column, $value, $index);
 
