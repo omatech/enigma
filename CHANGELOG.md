@@ -44,3 +44,7 @@ All notable changes to `enigma` will be documented in this file
 
 - support php 8
 - support laravel 8
+
+## 1.3.1 - 2021-06-04
+
+- fix query builder on recursive relations
