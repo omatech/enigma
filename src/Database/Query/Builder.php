@@ -54,12 +54,14 @@ class Builder extends \Illuminate\Database\Query\Builder
             [$table, $column] = $tableColumn;
         }
 
-        $table = explode(' as laravel_reserved', $table)[0];
+        $parts = explode(' as ', $table);
+        $table = $parts[0];
+        $alias = $parts[1] ?? null;
 
         $ids = (new Enigma)->search($table, $column, $value, $index);
 
-        $closure = static function (self $query) use ($table, $ids) {
-            $query->whereRaw("$table.id IN ($ids)");
+        $closure = static function (self $query) use ($table, $alias, $ids) {
+            $query->whereRaw(($alias ?? $table).".id IN ($ids)");
         };
 
         $boolean === 'and'
