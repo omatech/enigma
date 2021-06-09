@@ -48,3 +48,7 @@ All notable changes to `enigma` will be documented in this file
 ## 1.3.1 - 2021-06-04
 
 - fix query builder on recursive relations
+
+## 1.3.2 - 2021-06-09
+
+- fix query builder on aliased relations
