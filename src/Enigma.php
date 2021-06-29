@@ -31,7 +31,7 @@ class Enigma
     public function __construct()
     {
         $key = new StringProvider(
-            substr(Hex::encode(env('APP_KEY')), 0, 64)
+            substr(Hex::encode(config('app.key')), 0, 64)
         );
 
         $backend = (config('enigma.backend') === 'fips') ? new FIPSCrypto() : new ModernCrypto();
