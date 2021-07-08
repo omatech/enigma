@@ -52,3 +52,8 @@ All notable changes to `enigma` will be documented in this file
 ## 1.3.2 - 2021-06-09
 
 - fix query builder on aliased relations
+
+## 1.3.3 - 2021-07-08
+
+- fix null key
+- fix long key for mysql
