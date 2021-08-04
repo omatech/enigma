@@ -129,11 +129,11 @@ class Enigma
     {
         $blindIndexMethod = $this->getBlindIndexMethod($columnName);
 
-        (app()->makeWith(DBInterface::class, [
-            TABLE => $model->getTable(),
-        ]))->deleteHashes($model->id, $columnName);
-
         if (method_exists($model, $blindIndexMethod)) {
+            (app()->makeWith(DBInterface::class, [
+                TABLE => $model->getTable(),
+            ]))->deleteHashes($model->id, $columnName);
+            
             $index = new Index;
             $index->name($columnName);
             $model->{$blindIndexMethod}($index);
