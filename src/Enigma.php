@@ -133,7 +133,7 @@ class Enigma
             (app()->makeWith(DBInterface::class, [
                 TABLE => $model->getTable(),
             ]))->deleteHashes($model->id, $columnName);
-            
+
             $index = new Index;
             $index->name($columnName);
             $model->{$blindIndexMethod}($index);
