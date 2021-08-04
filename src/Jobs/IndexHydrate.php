@@ -38,11 +38,14 @@ class IndexHydrate implements ShouldQueue
     public function handle(Enigma $enigma)
     {
         $model = (new $this->modelClass)::find($this->modelId);
-        $enigmaEncryptable = $model->getEnigmaEncryptable();
+        
+        if(null !== $model) {
+            $enigmaEncryptable = $model->getEnigmaEncryptable();
 
-        foreach ($enigmaEncryptable as $column) {
-            if ($model->{$column} !== null) {
-                $enigma->hydrateAsModel($model, $column, $model->{$column});
+            foreach ($enigmaEncryptable as $column) {
+                if ($model->{$column} !== null) {
+                    $enigma->hydrateAsModel($model, $column, $model->{$column});
+                }
             }
         }
     }
