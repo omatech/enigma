@@ -57,3 +57,10 @@ All notable changes to `enigma` will be documented in this file
 
 - fix null key
 - fix long key for mysql
+
+## 1.3.4 - 2021-07-08
+
+- fix models without blindindex
+- fix index hydrate when model is softdelete
+- update deps
+
