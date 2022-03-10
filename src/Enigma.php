@@ -30,12 +30,14 @@ class Enigma
      */
     public function __construct()
     {
-        $key = new StringProvider(
-            substr(Hex::encode(config('app.key')), 0, 64)
-        );
-
-        $backend = (config('enigma.backend') === 'fips') ? new FIPSCrypto() : new ModernCrypto();
-        $this->engine = new CipherSweet($key, $backend);
+        $confKey = config('app.key');
+        if($confKey) {
+            $key = new StringProvider(
+                substr(Hex::encode($confKey), 0, 64)
+            );
+            $backend = (config('enigma.backend') === 'fips') ? new FIPSCrypto() : new ModernCrypto();
+            $this->engine = new CipherSweet($key, $backend);
+        }
     }
 
     /**
