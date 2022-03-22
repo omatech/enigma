@@ -67,3 +67,8 @@ All notable changes to `enigma` will be documented in this file
 ## 1.3.5 - 2022-03-11
  
 - fix for artisan commands without app key
+
+## 1.3.6 - 2022-03-22
+
+- support php 8.1
+- support laravel 9
