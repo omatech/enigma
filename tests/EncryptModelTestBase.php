@@ -2,6 +2,7 @@
 
 namespace Omatech\Enigma\Tests;
 
+use Illuminate\Foundation\Testing\Concerns\MocksApplicationServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Omatech\Enigma\CipherSweet\Index;
@@ -16,6 +17,8 @@ use ParagonIE\CipherSweet\Transformation\Lowercase;
 
 class EncryptModelTestBase extends TestCase
 {
+    use MocksApplicationServices;
+    
     /** @test */
     public function check_for_enigma_indexes_tables(): void
     {
