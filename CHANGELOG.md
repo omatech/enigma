@@ -64,3 +64,6 @@ All notable changes to `enigma` will be documented in this file
 - fix index hydrate when model is softdelete
 - update deps
 
+## 1.3.5 - 2022-03-11
+ 
+- fix for artisan commands without app key
