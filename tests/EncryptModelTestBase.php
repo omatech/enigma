@@ -18,7 +18,7 @@ use ParagonIE\CipherSweet\Transformation\Lowercase;
 class EncryptModelTestBase extends TestCase
 {
     use MocksApplicationServices;
-    
+
     /** @test */
     public function check_for_enigma_indexes_tables(): void
     {
