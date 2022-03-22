@@ -40,6 +40,8 @@ jobs:
       env: ILLUMINATE_SUPPORT=^8.0 ORCHESTRA_TESTBENCH=^6.0 PHPUNIT=^8.0
     - php: 8.0
       env: ILLUMINATE_SUPPORT=^8.0 ORCHESTRA_TESTBENCH=^6.0 PHPUNIT=^9.0
+    - php: 8.0
+      env: ILLUMINATE_SUPPORT=^9.0 ORCHESTRA_TESTBENCH=^7.0 PHPUNIT=^9.0
 
 before_script:
   - sudo curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
