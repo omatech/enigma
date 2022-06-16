@@ -86,6 +86,13 @@ trait HasEnigma
                 $model->attributes
             );
         });
+        
+        static::created(static function ($model) {
+            if (! empty($model->getEnigmaEncryptable())) {
+                dispatch(new IndexHydrate(get_class($model), $model->id))
+                    ->onQueue('enigma');
+            }
+        });
     }
 
     /**
