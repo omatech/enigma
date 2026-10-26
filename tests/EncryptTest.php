@@ -6,8 +6,7 @@ use SodiumException;
 
 class EncryptTest extends TestCase
 {
-    /** @test */
-    public function encrypt_with_enigma_helper(): void
+    public function test_encrypt_with_enigma_helper(): void
     {
         $value = 'value to encrypt';
         $encryptedValue = encryptEnigma('test', 'test', $value);
@@ -15,8 +14,7 @@ class EncryptTest extends TestCase
         $this->assertNotFalse(strpos($encryptedValue, 'nacl:'));
     }
 
-    /** @test */
-    public function decrypt_with_enigma_helper(): void
+    public function test_decrypt_with_enigma_helper(): void
     {
         $value = 'value to encrypt';
         $encryptedValue = encryptEnigma('test', 'test', $value);
@@ -27,8 +25,7 @@ class EncryptTest extends TestCase
         $this->assertSame($value, $decryptedValue);
     }
 
-    /** @test */
-    public function invalid_encryption_decryption_with_enigma_helper(): void
+    public function test_invalid_encryption_decryption_with_enigma_helper(): void
     {
         $this->expectException(SodiumException::class);
 

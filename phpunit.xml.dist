@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         verbose="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false">
-    <testsuites>
-        <testsuite name="Test Suite">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src/</directory>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="junit" target="build/report.junit.xml"/>
-        <log type="coverage-html" target="build/coverage"/>
-        <log type="coverage-text" target="build/coverage.txt"/>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
-    <php>
-        <env name="APP_KEY" value="base64:FU4QSEy9E2sYL+oJBNiOgazVLVOn2T8DQhTVzjQ/1Zs=" />
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" defaultTestSuite="SQLite" cacheDirectory="/tmp/enigma-phpunit" failOnWarning="true" failOnRisky="true" failOnDeprecation="true">
+  <testsuites>
+    <testsuite name="SQLite"><file>tests/EncryptTest.php</file><file>tests/SqliteTest.php</file></testsuite>
+    <testsuite name="ExternalDatabases"><file>tests/MySQLTest.php</file><file>tests/PostgresTest.php</file><file>tests/SqlSrvTest.php</file></testsuite>
+  </testsuites>
+  <source><include><directory suffix=".php">src</directory></include></source>
+  <php><env name="APP_KEY" value="base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/></php>
 </phpunit>

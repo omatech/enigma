@@ -2,7 +2,7 @@
 
 namespace Omatech\Enigma\Tests;
 
-use Illuminate\Foundation\Testing\Concerns\MocksApplicationServices;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Omatech\Enigma\CipherSweet\Index;
@@ -17,25 +17,22 @@ use ParagonIE\CipherSweet\Transformation\Lowercase;
 
 class EncryptModelTestBase extends TestCase
 {
-    use MocksApplicationServices;
-
-    /** @test */
-    public function check_for_enigma_indexes_tables(): void
+    public function test_check_for_enigma_indexes_tables(): void
     {
         $this->assertTrue(Schema::hasTable('stub1_index'));
         $this->assertTrue(Schema::hasTable('stub2_index'));
         $this->assertTrue(Schema::hasTable('stub3_index'));
     }
 
-    /** @test */
-    public function encrypt_with_enigma_on_model(): void
+    public function test_encrypt_with_enigma_on_model(): void
     {
-        $this->expectsJobs(IndexHydrate::class);
+        Bus::fake([IndexHydrate::class]);
 
         $stub = new Stub1();
         $stub->name = 'test';
         $stub->save();
 
+        Bus::assertDispatched(IndexHydrate::class);
         $this->assertSame($stub->name, 'test');
 
         $stub = Stub1::find($stub->id);
@@ -47,8 +44,7 @@ class EncryptModelTestBase extends TestCase
         ]);
     }
 
-    /** @test */
-    public function encrypt_with_laravel_on_model(): void
+    public function test_encrypt_with_laravel_on_model(): void
     {
         $stub = new Stub2();
         $stub->name = 'test';
@@ -65,8 +61,7 @@ class EncryptModelTestBase extends TestCase
         ]);
     }
 
-    /** @test */
-    public function exception_on_encrypt_with_laravel_and_enigma_on_model(): void
+    public function test_exception_on_encrypt_with_laravel_and_enigma_on_model(): void
     {
         $this->expectException(RepeatedAttributesException::class);
 
@@ -75,8 +70,7 @@ class EncryptModelTestBase extends TestCase
         $stub->save();
     }
 
-    /** @test */
-    public function find_for_where_encrypted_value(): void
+    public function test_find_for_where_encrypted_value(): void
     {
         $stub = new Stub1();
         $stub->name = 'test';
@@ -88,8 +82,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertSame($stub->id, $foundStub->id);
     }
 
-    /** @test */
-    public function find_for_or_where_encrypted_value(): void
+    public function test_find_for_or_where_encrypted_value(): void
     {
         $stub1 = new Stub1();
         $stub1->name = 'stub1';
@@ -106,8 +99,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertSame(count($foundStub), 2);
     }
 
-    /** @test */
-    public function find_no_results_on_where_encrypted_value(): void
+    public function test_find_no_results_on_where_encrypted_value(): void
     {
         $stub1 = new Stub1();
         $stub1->name = 'stub1';
@@ -123,8 +115,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertSame(count($foundStub), 0);
     }
 
-    /** @test */
-    public function find_on_non_indexed_value(): void
+    public function test_find_on_non_indexed_value(): void
     {
         $stub1 = new Stub1();
         $stub1->name = 'stub1';
@@ -137,8 +128,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertSame(count($foundStub), 0);
     }
 
-    /** @test */
-    public function update_encrypted_value(): void
+    public function test_update_encrypted_value(): void
     {
         $stub = new Stub1();
         $stub->name = 'test';
@@ -153,8 +143,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertNotSame($stub->name, $foundStub->name);
     }
 
-    /** @test */
-    public function encrypt_multiple_fields_with_index(): void
+    public function test_encrypt_multiple_fields_with_index(): void
     {
         $stub = new Stub1();
         $stub->name = 'test';
@@ -170,8 +159,7 @@ class EncryptModelTestBase extends TestCase
         ]);
     }
 
-    /** @test */
-    public function encrypt_without_index(): void
+    public function test_encrypt_without_index(): void
     {
         $stub = new Stub1();
         $stub->name = 'test';
@@ -184,8 +172,7 @@ class EncryptModelTestBase extends TestCase
         ]);
     }
 
-    /** @test */
-    public function find_for_where_encrypted_value_with_query_builder(): void
+    public function test_find_for_where_encrypted_value_with_query_builder(): void
     {
         $stub = new Stub1();
         $stub->name = 'test123';
@@ -208,8 +195,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertSame($stub->id, (int) $foundStub->id);
     }
 
-    /** @test */
-    public function find_for_or_where_encrypted_value_with_query_builder(): void
+    public function test_find_for_or_where_encrypted_value_with_query_builder(): void
     {
         $stub = new Stub1();
         $stub->name = 'test123';
@@ -239,8 +225,7 @@ class EncryptModelTestBase extends TestCase
         $this->assertSame($stub->id, (int) $foundStub->id);
     }
 
-    /** @test */
-    public function rehydrate_index_command(): void
+    public function test_rehydrate_index_command(): void
     {
         $stub = new Stub1();
         $stub->name = 'test';
@@ -253,8 +238,7 @@ class EncryptModelTestBase extends TestCase
             ->assertExitCode(0);
     }
 
-    /** @test */
-    public function rehydrate_all_index_command(): void
+    public function test_rehydrate_all_index_command(): void
     {
         $this->expectException(RepeatedAttributesException::class);
 
