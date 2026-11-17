@@ -6,3 +6,7 @@ coverage
 /test-report.xml
 /.phpunit.result.cache
 .history
+
+/vendor/
+/.phpunit.cache/
+/.docker/evidence/

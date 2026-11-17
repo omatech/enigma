@@ -1,61 +1,73 @@
 {
-    "name": "omatech/enigma",
-    "description": "Enigma is a ciphersweet wrapper for laravel, it gives us the possibility to search on encrypted values.",
-    "keywords": [
-        "omatech",
-        "enigma",
-        "laravel",
-        "ciphersweet",
-        "encryption",
-        "search",
-        "blindindex",
-        "hash"
-    ],
-    "homepage": "https://github.com/omatech/enigma",
-    "license": "MIT",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Christian Bohollo",
-            "email": "cbohollo@omatech.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^7.2|^8.0",
-        "haydenpierce/class-finder": "^0.4|^0.6",
-        "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
-        "paragonie/ciphersweet": "^3.0|^4.10"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^13.4.3",
-        "orchestra/testbench": "^11.3.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Omatech\\Enigma\\": "src"
-        },
-        "files": [
-            "src/Helpers/enigma.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Omatech\\Enigma\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Omatech\\Enigma\\EnigmaServiceProvider"
-            ]
-        }
+  "name": "omatech/enigma",
+  "description": "Enigma is a ciphersweet wrapper for laravel, it gives us the possibility to search on encrypted values.",
+  "keywords": [
+    "omatech",
+    "enigma",
+    "laravel",
+    "ciphersweet",
+    "encryption",
+    "search",
+    "blindindex",
+    "hash"
+  ],
+  "homepage": "https://github.com/omatech/enigma",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Christian Bohollo",
+      "email": "cbohollo@omatech.com",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^7.2|^8.0",
+    "haydenpierce/class-finder": "^0.4|^0.6",
+    "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+    "paragonie/ciphersweet": "^3.0|^4.10"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "13.4.6",
+    "orchestra/testbench": "^11.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Omatech\\Enigma\\": "src"
+    },
+    "files": [
+      "src/Helpers/enigma.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Omatech\\Enigma\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+    "check": [
+      "@test",
+      "@composer validate --no-check-publish",
+      "@composer audit --locked"
+    ]
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "8.5.12"
+    },
+    "allow-plugins": false,
+    "github-protocols": [
+      "https"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Omatech\\Enigma\\EnigmaServiceProvider"
+      ]
+    }
+  }
 }
