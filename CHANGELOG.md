@@ -72,3 +72,7 @@ All notable changes to `enigma` will be documented in this file
 
 - support php 8.1
 - support laravel 9
+
+## 1.4.2 - 2026-11-20
+
+- fix: Schema::table() callbacks were dropped on Laravel 12 and 13 (the blueprint resolver now receives every argument the framework passes)
