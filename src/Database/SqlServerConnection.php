@@ -29,9 +29,9 @@ class SqlServerConnection extends \Illuminate\Database\SqlServerConnection
     public function getSchemaBuilder(): \Illuminate\Database\Schema\SqlServerBuilder
     {
         $builder = parent::getSchemaBuilder();
-        $builder->blueprintResolver(static function ($table, $callback) {
-            return new Blueprint($table, $callback);
-        });
+        // Laravel 12+ resolves blueprints with ($connection, $table, $callback); earlier versions with
+        // ($table, $callback). Passing every argument through keeps Schema::table()'s callback on both.
+        $builder->blueprintResolver(static fn (...$arguments) => new Blueprint(...$arguments));
 
         return $builder;
     }

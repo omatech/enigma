@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" defaultTestSuite="SQLite" cacheDirectory="/tmp/enigma-phpunit" failOnWarning="true" failOnRisky="true" failOnDeprecation="true">
   <testsuites>
-    <testsuite name="SQLite"><file>tests/EncryptTest.php</file><file>tests/SqliteTest.php</file></testsuite>
+    <testsuite name="SQLite"><file>tests/EncryptTest.php</file><file>tests/SqliteTest.php</file><file>tests/SchemaTableTest.php</file></testsuite>
     <testsuite name="ExternalDatabases"><file>tests/MySQLTest.php</file><file>tests/PostgresTest.php</file><file>tests/SqlSrvTest.php</file></testsuite>
   </testsuites>
   <source><include><directory suffix=".php">src</directory></include></source>
